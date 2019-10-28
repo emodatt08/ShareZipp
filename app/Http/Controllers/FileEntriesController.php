@@ -29,7 +29,7 @@ class FileEntriesController extends Controller
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
         $path = hash( 'sha256', time());
-        //dd(File::get($file));
+        //dd($path);
         
         if(Storage::disk('uploads')->put($path.'/'.$filename,  File::get($file))) {
             

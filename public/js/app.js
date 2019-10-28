@@ -1863,12 +1863,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['input_name', 'post_url'],
   data: function data() {
     console.log("here");
     return {
-      files: [] //post_url: "files/upload-file"
+      files: [],
+      filetype: "0",
+      fileSrc: "",
+      folderName: "" //post_url: "files/upload-file"
 
     };
   },
@@ -1881,21 +1889,154 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       this.getImagePreviews();
+      console.log(this.files);
     },
     getImagePreviews: function getImagePreviews() {
       var _this = this;
 
       var _loop = function _loop(i) {
+        var str = _this.files[i].name;
+        var extension = str.slice((str.lastIndexOf(".") - 1 >>> 0) + 2);
+
         if (/\.(jpe?g|png|gif)$/i.test(_this.files[i].name)) {
           var reader = new FileReader();
           reader.addEventListener("load", function () {
             this.$refs['preview' + parseInt(i)][0].src = reader.result;
           }.bind(_this), false);
           reader.readAsDataURL(_this.files[i]);
-        } else {
-          _this.$nextTick(function () {
-            this.$refs['preview' + parseInt(i)][0].src = '/img/generic.png';
-          });
+        }
+
+        switch (extension) {
+          case "css":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/css.png';
+            break;
+
+          case "docx":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/docx.png';
+            break;
+
+          case "fla":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/fla.png';
+            break;
+
+          case "html":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/html.png';
+            break;
+
+          case "ind":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/ind.png';
+            break;
+
+          case "ini":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/ini.png';
+            break;
+
+          case "jsf":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/jsf.png';
+            break;
+
+          case "mkv":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/mkv.png';
+            break;
+
+          case "mov":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/mov.png';
+            break;
+
+          case "pdf":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/pdf.png';
+            break;
+
+          case "pptx":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/pptx.png';
+            break;
+
+          case "proj":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/proj.png';
+            break;
+
+          case "pub":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/pub.png';
+            break;
+
+          case "md":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/readme.png';
+            break;
+
+          case "txt":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/text.png';
+            break;
+
+          case "tiff":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/tiff.png';
+            break;
+
+          case "wav":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/wav.png';
+            break;
+
+          case "xls":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/xls.png';
+            break;
+
+          case "xlsx":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/xlsx.png';
+            break;
+
+          case "zip":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/zip.png';
+            break;
+
+          case "php":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/php.png';
+            break;
+
+          case "js":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/js.png';
+            break;
+
+          case "py":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/py.png';
+            break;
+
+          case "rb":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/rb.png';
+            break;
+
+          case "rar":
+            _this.filetype = 1;
+            _this.files[i].fileSrc = '/files/rar.png';
+            break;
+
+          default:
+            _this.$nextTick(function () {
+              this.$refs['preview' + parseInt(i)][0].src = '/files/generic.png';
+            });
+
         }
       };
 
@@ -37907,6 +38048,30 @@ var render = function() {
           }
         }),
         _vm._v(" "),
+        _c("div", { staticClass: "col-md-6" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.folderName,
+                expression: "folderName"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { id: "email", type: "email", required: "", autofocus: "" },
+            domProps: { value: _vm.folderName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.folderName = $event.target.value
+              }
+            }
+          })
+        ]),
+        _vm._v(" "),
         _vm._m(0)
       ]),
       _vm._v(" "),
@@ -37917,6 +38082,10 @@ var render = function() {
             refInFor: true,
             staticClass: "preview"
           }),
+          _vm._v(" "),
+          (_vm.filetype = 1)
+            ? _c("img", { attrs: { id: "previewIcon", src: file.fileSrc } })
+            : _vm._e(),
           _vm._v("\n        " + _vm._s(file.name) + "\n        "),
           file.id > 0
             ? _c("div", { staticClass: "success-container" }, [
