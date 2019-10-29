@@ -1868,6 +1868,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['input_name', 'post_url'],
   data: function data() {
@@ -1999,7 +2005,7 @@ __webpack_require__.r(__webpack_exports__);
 
           case "xlsx":
             _this.filetype = 1;
-            _this.files[i].fileSrc = '/files/xlsx.png';
+            _this.files[i].fileSrc = '/files/xls.png';
             break;
 
           case "zip":
@@ -2048,20 +2054,44 @@ __webpack_require__.r(__webpack_exports__);
       this.files.splice(key, 1);
       this.getImagePreviews();
     },
+    makeid: function makeid(length) {
+      var result = '';
+      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var charactersLength = characters.length;
+
+      for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      }
+
+      return result;
+    },
+    clearFiles: function clearFiles() {
+      this.files = [];
+    },
     submitFiles: function submitFiles() {
       var _this2 = this;
 
+      var folderIndexName = this.folderName + "_" + this.makeid(13);
+
       var _loop2 = function _loop2(i) {
+        var str = _this2.files[i].name;
+        var extension = str.slice((str.lastIndexOf(".") - 1 >>> 0) + 2);
+
         if (_this2.files[i].id) {
           return "continue";
         }
 
+        console.log(extension);
         var formData = new FormData();
         formData.append('file', _this2.files[i]);
-        axios.post('/' + _this2.post_url, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
+        formData.append('folderName', _this2.folderName);
+        formData.append('folderIndexName', folderIndexName);
+        formData.append('fileType', extension);
+        axios({
+          method: 'post',
+          //CHANGE TO POST
+          url: '/' + _this2.post_url,
+          data: formData
         }).then(function (data) {
           this.files[i].id = data['data']['id'];
           this.files.splice(i, 1, this.files[i]);
@@ -38037,6 +38067,34 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "exampleInputEmail1" } }, [
+          _vm._v("Folder Name")
+        ]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.folderName,
+              expression: "folderName"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: { id: "text", type: "text", required: "", autofocus: "" },
+          domProps: { value: _vm.folderName },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.folderName = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
       _c("div", { staticClass: "large-12 medium-12 small-12 filezone" }, [
         _c("input", {
           ref: "files",
@@ -38047,30 +38105,6 @@ var render = function() {
             }
           }
         }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-6" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.folderName,
-                expression: "folderName"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { id: "email", type: "email", required: "", autofocus: "" },
-            domProps: { value: _vm.folderName },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.folderName = $event.target.value
-              }
-            }
-          })
-        ]),
         _vm._v(" "),
         _vm._m(0)
       ]),
@@ -38131,6 +38165,27 @@ var render = function() {
           }
         },
         [_vm._v("Submit")]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.files.length > 0,
+              expression: "files.length > 0"
+            }
+          ],
+          staticClass: "submit-button",
+          on: {
+            click: function($event) {
+              return _vm.clearFiles()
+            }
+          }
+        },
+        [_vm._v("Clear")]
       )
     ],
     2

@@ -1,10 +1,15 @@
 <template>
     <div class="container">
+ 
+
+     <div class="form-group">
+            <label for="exampleInputEmail1">Folder Name</label>
+           <input id="text" type="text" class="form-control"  v-model="folderName" required autofocus>
+     </div>
+
         <div class="large-12 medium-12 small-12 filezone">
             <input type="file" id="files" ref="files" multiple v-on:change="handleFiles()"/>
-            <div class="col-md-6">
-                <input id="email" type="email" class="form-control" v-model="folderName" required autofocus>
-            </div>
+            
                     
             <p>
                 Drop your files here <br>or click to search
@@ -25,6 +30,7 @@
         </div>
 
         <a class="submit-button" v-on:click="submitFiles()" v-show="files.length > 0">Submit</a>
+        <a class="submit-button" v-on:click="clearFiles()" v-show="files.length > 0">Clear</a>
     </div>
 </template>
 
@@ -159,7 +165,7 @@ export default {
                     
                     case "xlsx":
                         this.filetype = 1;
-                        this.files[i].fileSrc = '/files/xlsx.png';
+                        this.files[i].fileSrc = '/files/xls.png';
                         break;
                     
                     case "zip":
@@ -205,22 +211,39 @@ export default {
             this.files.splice( key, 1 );
             this.getImagePreviews();
     },
+    makeid(length) {
+            var result           = '';
+            var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            var charactersLength = characters.length;
+            for ( var i = 0; i < length; i++ ) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;  
+    },
+    clearFiles() {
+        this.files = [];
+    },
     submitFiles() {
+        let folderIndexName = this.folderName + "_" + this.makeid(13)
+        
     for( let i = 0; i < this.files.length; i++ ){
+        const str = this.files[i].name
+        const extension = str.slice((str.lastIndexOf(".") - 1 >>> 0) + 2) 
         if(this.files[i].id) {
             continue;
         }
+        console.log(extension);
         let formData = new FormData();
         formData.append('file', this.files[i]);
-
-        axios.post('/' + this.post_url,
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }
-        ).then(function(data) {
+        formData.append('folderName', this.folderName);
+        formData.append('folderIndexName', folderIndexName);
+        formData.append('fileType', extension);
+        
+       axios({
+                method: 'post', //CHANGE TO POST
+                url: '/' + this.post_url,
+                data: formData,
+        }).then(function(data) {
             this.files[i].id = data['data']['id'];
             this.files.splice(i, 1, this.files[i]);
             console.log('success');
