@@ -1,6 +1,5 @@
 <template>
     <div class="container">
- 
 
      <div class="form-group">
             <label for="exampleInputEmail1">Folder Name</label>
@@ -20,6 +19,7 @@
             <img class="preview" v-bind:ref="'preview'+parseInt(key)"/>
              <img id="previewIcon" :src="file.fileSrc"  v-if="filetype = 1" />
             {{ file.name }}
+            
             <div class="success-container" v-if="file.id > 0">
                 Success
                 <input type="hidden" :name="input_name" :value="file.id"/>
@@ -27,6 +27,8 @@
             <div class="remove-container" v-else>
                 <a class="remove" v-on:click="removeFile(key)">Remove</a>
             </div>
+            <progress :value="percent" max="100"></progress>% {{percent}}
+
         </div>
 
         <a class="submit-button" v-on:click="submitFiles()" v-show="files.length > 0">Submit</a>
@@ -43,7 +45,8 @@ export default {
             files: [],
             filetype:"0",
             fileSrc:"",
-            folderName:""
+            folderName:"",
+            percent:0
             //post_url: "files/upload-file"
         }
         
@@ -51,8 +54,8 @@ export default {
     methods: {
        handleFiles() {
             let uploadedFiles = this.$refs.files.files;
-
             for(var i = 0; i < uploadedFiles.length; i++) {
+
                 this.files.push(uploadedFiles[i]);
             }
             
@@ -241,13 +244,18 @@ export default {
         
        axios({
                 method: 'post', //CHANGE TO POST
-                url: '/' + this.post_url,
+                url: '/' + this.post_url,      
                 data: formData,
+                onUploadProgress: function( progressEvent ) {
+                    this.percent = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+                }.bind(this)
+                
         }).then(function(data) {
             this.files[i].id = data['data']['id'];
             this.files.splice(i, 1, this.files[i]);
             console.log('success');
         }.bind(this)).catch(function(data) {
+            this.percent = 0;
             console.log('error');
         });
     }
@@ -266,10 +274,10 @@ export default {
         cursor: pointer;
     }
     .filezone {
-        outline: 2px dashed grey;
+        outline: 2px dashed white;
         outline-offset: -10px;
-        background: #ccc;
-        color: dimgray;
+        background: #2196F3;
+        color: white;
         padding: 10px 10px;
         min-height: 200px;
         position: relative;

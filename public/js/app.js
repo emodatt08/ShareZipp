@@ -1874,6 +1874,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['input_name', 'post_url'],
   data: function data() {
@@ -1882,7 +1884,8 @@ __webpack_require__.r(__webpack_exports__);
       files: [],
       filetype: "0",
       fileSrc: "",
-      folderName: "" //post_url: "files/upload-file"
+      folderName: "",
+      percent: 0 //post_url: "files/upload-file"
 
     };
   },
@@ -2091,12 +2094,16 @@ __webpack_require__.r(__webpack_exports__);
           method: 'post',
           //CHANGE TO POST
           url: '/' + _this2.post_url,
-          data: formData
+          data: formData,
+          onUploadProgress: function (progressEvent) {
+            this.percent = parseInt(Math.round(progressEvent.loaded * 100 / progressEvent.total));
+          }.bind(_this2)
         }).then(function (data) {
           this.files[i].id = data['data']['id'];
           this.files.splice(i, 1, this.files[i]);
           console.log('success');
         }.bind(_this2))["catch"](function (data) {
+          this.percent = 0;
           console.log('error');
         });
       };
@@ -6569,7 +6576,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ninput[type=\"file\"][data-v-78ce364a]{\n    opacity: 0;\n    width: 100%;\n    height: 200px;\n    position: absolute;\n    cursor: pointer;\n}\n.filezone[data-v-78ce364a] {\n    outline: 2px dashed grey;\n    outline-offset: -10px;\n    background: #ccc;\n    color: dimgray;\n    padding: 10px 10px;\n    min-height: 200px;\n    position: relative;\n    cursor: pointer;\n}\n.filezone[data-v-78ce364a]:hover {\n    background: #c0c0c0;\n}\n.filezone p[data-v-78ce364a] {\n    font-size: 1.2em;\n    text-align: center;\n    padding: 50px 50px 50px 50px;\n}\ndiv.file-listing img[data-v-78ce364a]{\n    max-width: 90%;\n}\ndiv.file-listing[data-v-78ce364a]{\n    margin: auto;\n    padding: 10px;\n    border-bottom: 1px solid #ddd;\n}\ndiv.file-listing img[data-v-78ce364a]{\n    height: 100px;\n}\ndiv.success-container[data-v-78ce364a]{\n    text-align: center;\n    color: green;\n}\ndiv.remove-container[data-v-78ce364a]{\n    text-align: center;\n}\ndiv.remove-container a[data-v-78ce364a]{\n    color: red;\n    cursor: pointer;\n}\na.submit-button[data-v-78ce364a]{\n    display: block;\n    margin: auto;\n    text-align: center;\n    width: 200px;\n    padding: 10px;\n    text-transform: uppercase;\n    background-color: #CCC;\n    color: white;\n    font-weight: bold;\n    margin-top: 20px;\n}\n", ""]);
+exports.push([module.i, "\ninput[type=\"file\"][data-v-78ce364a]{\n    opacity: 0;\n    width: 100%;\n    height: 200px;\n    position: absolute;\n    cursor: pointer;\n}\n.filezone[data-v-78ce364a] {\n    outline: 2px dashed white;\n    outline-offset: -10px;\n    background: #2196F3;\n    color: white;\n    padding: 10px 10px;\n    min-height: 200px;\n    position: relative;\n    cursor: pointer;\n}\n.filezone[data-v-78ce364a]:hover {\n    background: #c0c0c0;\n}\n.filezone p[data-v-78ce364a] {\n    font-size: 1.2em;\n    text-align: center;\n    padding: 50px 50px 50px 50px;\n}\ndiv.file-listing img[data-v-78ce364a]{\n    max-width: 90%;\n}\ndiv.file-listing[data-v-78ce364a]{\n    margin: auto;\n    padding: 10px;\n    border-bottom: 1px solid #ddd;\n}\ndiv.file-listing img[data-v-78ce364a]{\n    height: 100px;\n}\ndiv.success-container[data-v-78ce364a]{\n    text-align: center;\n    color: green;\n}\ndiv.remove-container[data-v-78ce364a]{\n    text-align: center;\n}\ndiv.remove-container a[data-v-78ce364a]{\n    color: red;\n    cursor: pointer;\n}\na.submit-button[data-v-78ce364a]{\n    display: block;\n    margin: auto;\n    text-align: center;\n    width: 200px;\n    padding: 10px;\n    text-transform: uppercase;\n    background-color: #CCC;\n    color: white;\n    font-weight: bold;\n    margin-top: 20px;\n}\n", ""]);
 
 // exports
 
@@ -38120,7 +38127,7 @@ var render = function() {
           (_vm.filetype = 1)
             ? _c("img", { attrs: { id: "previewIcon", src: file.fileSrc } })
             : _vm._e(),
-          _vm._v("\n        " + _vm._s(file.name) + "\n        "),
+          _vm._v("\n        " + _vm._s(file.name) + "\n        \n        "),
           file.id > 0
             ? _c("div", { staticClass: "success-container" }, [
                 _vm._v("\n            Success\n            "),
@@ -38142,7 +38149,13 @@ var render = function() {
                   },
                   [_vm._v("Remove")]
                 )
-              ])
+              ]),
+          _vm._v(" "),
+          _c("progress", {
+            attrs: { max: "100" },
+            domProps: { value: _vm.percent }
+          }),
+          _vm._v("% " + _vm._s(_vm.percent) + "\n\n    ")
         ])
       }),
       _vm._v(" "),
