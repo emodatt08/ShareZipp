@@ -37,7 +37,9 @@
 </template>
 
 <script>
+
 export default {
+    
      props: ['input_name', 'post_url'],
     data() {
         console.log("here");
@@ -223,10 +225,19 @@ export default {
             }
             return result;  
     },
+    msg(header, message){
+        this.$swal(header, message, 'OK');
+       //alert("kindly add a folder name");
+    },
     clearFiles() {
         this.files = [];
     },
     submitFiles() {
+        if(!this.folderName){
+           this.msg('Folder Name', 'kindly add a folder name');
+        return 0;
+            
+        }
         let folderIndexName = this.folderName + "_" + this.makeid(13)
         
     for( let i = 0; i < this.files.length; i++ ){

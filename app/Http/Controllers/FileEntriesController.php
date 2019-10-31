@@ -28,43 +28,55 @@ class FileEntriesController extends Controller
      * @return json
      */
     public function uploadFile(Request $request) {
-        $file = $request->file('file');
-        //dd($file);
-        $filename = $file->getClientOriginalName();
-        $path = hash( 'sha256', time());
-        $folderId = $request['folderIndexName'];
-        //dd($path);
-        
-        if(Storage::disk('uploads')->put($path.'/'.$filename,  File::get($file))) {
+     if(!$this->checkFolderName($request)):
+            $file = $request->file('file');
+            //dd($file);
+            $filename = $file->getClientOriginalName();
+            $path = hash( 'sha256', time());
+            $folderId = str_replace(" ", "", $request['folderIndexName']);
+            //dd($path);
             
-            $input['filename'] = $filename;
-            $input['mime'] = $file->getClientMimeType();
-            $input['file_ext'] = $request['fileType'];
-            $input['path'] = $path;
-            $input['folder_id'] = $folderId;
-            $input['size'] = $file->getClientSize();
+            if(Storage::disk('uploads')->put($path.'/'.$filename,  File::get($file))) {
+                
+                $input['filename'] = $filename;
+                $input['mime'] = $file->getClientMimeType();
+                $input['file_ext'] = $request['fileType'];
+                $input['path'] = $path;
+                $input['folder_id'] = $folderId;
+                $input['size'] = $file->getClientSize();
+                
+                //enter files
+                $file = FileEntry::create($input);
             
-            //enter files
-            $file = FileEntry::create($input);
-           
-            //enter folder
-             $folder = Folder::create(['folder_id' => $folderId, 'folder_name' => $request['folderName'], 'user_id'=>Auth::user()->id]);
+                //enter folder
+                $folder = Folder::create(['folder_id' => $folderId, 'folder_name' => $request['folderName'], 'user_id'=>Auth::user()->id]);
 
 
+                return response()->json([
+                    'success' => true,
+                    'id' => $file->id
+                ], 200);
+            }
             return response()->json([
-                'success' => true,
-                'id' => $file->id
-            ], 200);
-        }
+                'success' => false
+            ], 500);
+
+    else:
         return response()->json([
-            'success' => false
-        ], 500);
+            'failure' => "A Folder with the same name already exists"
+        ], 200);
+    endif;
     }
 
 
 
     public function create() {
         return view('files.create');
+    }
+
+    public function checkFolderName($request){
+       return Folder::where('user_id', Auth::user()->id)->where('folder_name', $request['folderIndexName'])->first();
+   
     }
 
 }
