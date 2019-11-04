@@ -18,8 +18,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('files', 'FileEntriesController@index');
     Route::get('files/create', 'FileEntriesController@create');
+    Route::get('files/{folder_id}', 'FileEntriesController@index');
+    
     
 });
 Route::post('files/upload-file', 'FileEntriesController@uploadFile');
@@ -31,4 +32,4 @@ Route::get('files/{path_file}/{file}', function($path_file = null, $file = null)
     }
 });
 
-Route::get('/home', 'FileEntriesController@index')->name('home');
+Route::get('/home', 'FolderController@index')->name('home');

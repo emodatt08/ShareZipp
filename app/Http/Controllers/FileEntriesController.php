@@ -16,8 +16,8 @@ class FileEntriesController extends Controller
      * @param $request instance
      */
 
-    public function index(Request $request) {
-        $files = FileEntry::all();
+    public function index(Request $request, $folder_id) {
+        $files = FileEntry::where('folder_id', $folder_id)->get();
     
         return view('files.index', compact('files'));
     }

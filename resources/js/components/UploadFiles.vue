@@ -264,6 +264,7 @@ export default {
         }).then(function(data) {
             this.files[i].id = data['data']['id'];
             this.files.splice(i, 1, this.files[i]);
+            this.removeFile( i );
             console.log('success');
         }.bind(this)).catch(function(data) {
             this.percent = 0;

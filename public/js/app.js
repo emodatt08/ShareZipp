@@ -2109,6 +2109,7 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (data) {
           this.files[i].id = data['data']['id'];
           this.files.splice(i, 1, this.files[i]);
+          this.removeFile(i);
           console.log('success');
         }.bind(_this2))["catch"](function (data) {
           this.percent = 0;
