@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\FileEntry;
 use Illuminate\Http\Request;
 
 class ZipController extends Controller
@@ -11,9 +12,26 @@ class ZipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($folderName)
     {
-        //
+        $zip = new \ZipArchive;
+        $files = FileEntry::where('folder_id', $folderName)->get();
+        
+        $tmp_file = storage_path('assets/myzip.zip');
+      
+            if ($zip->open($tmp_file,  \ZipArchive::CREATE)) {
+                foreach($files as $file){
+                    //dd(storage_path("files/uploads/".$file->path)."/".$file->filename, $file->filename);
+                    $zip->addFile(storage_path("files/uploads/".$file->path)."/".$file->filename, $file->filename);
+                    //$zip->addFile('folder/bootstrap.min.js', 'bootstrap.min.js');                
+                }
+                $zip->close();            
+                header('Content-disposition: attachment; filename='.$folderName.'.zip');
+                header('Content-type: application/zip');
+                readfile($tmp_file);
+        } else {
+            echo 'Failed!';
+        }
     }
 
     /**
@@ -21,9 +39,9 @@ class ZipController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($folderName)
     {
-        //
+      
     }
 
     /**

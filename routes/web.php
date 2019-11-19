@@ -18,11 +18,30 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::group(['middleware' => 'auth'], function () {
-    Route::get('files/create', 'FileEntriesController@create');
-    Route::get('files/{folder_id}', 'FileEntriesController@index');
+
+    Route::group(['prefix' => 'files'],function(){
+        Route::get('/create', 'FileEntriesController@create');
+        Route::get('/{folder_id}', 'FileEntriesController@index');
     
+    });
+     
     
 });
+
+Route::group(['prefix' => 'share'],function(){
+    Route::get('/{folderName}', 'ShareController@index');
+    Route::get('/download/{folderName}', 'ShareController@share');
+
+});
+
+
+
+Route::group(['prefix' => 'zip'],function(){
+    Route::get('/download/{folderName}', 'ZipController@index');
+
+});
+
+
 Route::post('files/upload-file', 'FileEntriesController@uploadFile');
 
 Route::get('files/{path_file}/{file}', function($path_file = null, $file = null) {

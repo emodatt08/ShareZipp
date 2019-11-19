@@ -18,8 +18,8 @@ class FileEntriesController extends Controller
 
     public function index(Request $request, $folder_id) {
         $files = FileEntry::where('folder_id', $folder_id)->get();
-    
-        return view('files.index', compact('files'));
+        $folderName = $files[0]->folder_id;
+        return view('files.index', compact('files', 'folderName'));
     }
 
     /**

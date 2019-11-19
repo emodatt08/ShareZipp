@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Files <a href="{{ url('files/create') }}" class="btn btn-info">Add more files</a> </div>
+                <div class="card-header">Files <a href="{{ url('files/create') }}" class="btn btn-info">Add more files</a> <a href="{{ url('share/').'/'.$folderName }}" class="btn btn-primary">Zip folder and share</a>  </div>
 
                 <div class="card-body">
                     @if($files->count())
