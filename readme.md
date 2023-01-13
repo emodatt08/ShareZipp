@@ -7,11 +7,11 @@ This Web App allows registered users to upload files and then it gives the abili
 ![](assets/1.png)
 
 
-Run
+
 ```
 create database and add settings to .env 
 ```
-run "php compose install" to install dependencies
+run "php compose install" to install dependencies"
 ```
-run "php artisan migrate" to make the necessary database migrations. 
+run "php artisan migrate" to make the necessary database migrations."
 ```
