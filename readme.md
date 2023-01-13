@@ -7,7 +7,7 @@ This Web App allows registered users to upload files and then it gives the abili
 ![](assets/1.png)
 
 
-
+Run
 ```
 create database and add settings to .env 
 ```
